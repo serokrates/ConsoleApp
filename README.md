@@ -1,0 +1,1 @@
+When doing code review I will be looking for unused variables, unnecessary imports and overal errors. There were some misspelling, unused variables and logical errors, mostly the code needed some minor changes.
