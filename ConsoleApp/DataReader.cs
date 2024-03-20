@@ -2,18 +2,16 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Text;
     using System.IO;
     using System.Linq;
-    using System.Threading.Tasks;
 
     public class DataReader
     {
         IEnumerable<ImportedObject> ImportedObjects;
 
-        public void ImportAndPrintData(string fileToImport, bool printData = true)
+        public void ImportAndPrintData(string fileToImport)
         {
-            ImportedObjects = new List<ImportedObject>() { new ImportedObject() };
+            ImportedObjects = new List<ImportedObject>();
 
             var streamReader = new StreamReader(fileToImport);
 
@@ -21,10 +19,9 @@
             while (!streamReader.EndOfStream)
             {
                 var line = streamReader.ReadLine();
-                importedLines.Add(line);
+                if (line != "") importedLines.Add(line);
             }
-
-            for (int i = 0; i <= importedLines.Count; i++)
+            for (int i = 0; i < importedLines.Count; i++)
             {
                 var importedLine = importedLines[i];
                 var values = importedLine.Split(';');
@@ -35,7 +32,15 @@
                 importedObject.ParentName = values[3];
                 importedObject.ParentType = values[4];
                 importedObject.DataType = values[5];
-                importedObject.IsNullable = values[6];
+                try
+                {
+                    importedObject.IsNullable = values[6];
+                    
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                }
                 ((List<ImportedObject>)ImportedObjects).Add(importedObject);
             }
 
@@ -103,18 +108,11 @@
 
     class ImportedObject : ImportedObjectBaseClass
     {
-        public string Name
-        {
-            get;
-            set;
-        }
         public string Schema;
 
         public string ParentName;
         public string ParentType
-        {
-            get; set;
-        }
+        { get; set; }
 
         public string DataType { get; set; }
         public string IsNullable { get; set; }
